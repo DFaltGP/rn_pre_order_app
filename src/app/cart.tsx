@@ -10,9 +10,11 @@ import Input from "@/components/input";
 import { Button } from "@/components/button";
 import { Feather } from "@expo/vector-icons";
 import { LinkButton } from "@/components/link-button";
+import { useNavigation } from "expo-router";
 
 export default function Cart() {
   const [address, setAddress] = useState("")
+  const navigation = useNavigation()
   const cartStore = useCartStore();
   const total = formatCurrency(cartStore.products.reduce((total, product) => total + product.price * product.quantity, 0)) // Estude o reduce, interessante
 
@@ -42,7 +44,10 @@ export default function Cart() {
 
       \n Valor total: ${total}
       `
-console.log(message)
+    console.log(message)
+    cartStore.clear()
+    navigation.goBack()
+    Alert.alert("Tudo pronto!", "Pedido enviado com sucesso")
     }
 
   return (
@@ -65,7 +70,7 @@ console.log(message)
         <Text className="text-white text-xl font-subtitle">Total:</Text>
         <Text className="text-lime-400 text-2xl font-heading">{total}</Text>
       </View>
-      <Input placeholder="Informe o endereço de entrega com Rua, Bairro, CEP, Número e Complemento" onChangeText={setAddress}/>
+      <Input placeholder="Informe o endereço de entrega com Rua, Bairro, CEP, Número e Complemento" onChangeText={setAddress} onSubmitEditing={handleOrder} blurOnSubmit returnKeyType="next"/>
       </View>
         </ScrollView>
         <View className="p-5 gap-5 ">
