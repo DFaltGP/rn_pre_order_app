@@ -1,7 +1,7 @@
 import { PRODUCTS } from "@/utils/data/products";
 import { formatCurrency } from "@/utils/functions/format-currency";
 import { useLocalSearchParams, useNavigation, Redirect } from "expo-router";
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, ScrollView } from "react-native";
 
 import { Button } from "@/components/button";
 
@@ -19,14 +19,14 @@ export default function Product() {
   const product = PRODUCTS.find((item) => item.id === id);
 
   function handleAddToCart() {
-    if(product) {
+    if (product) {
       cartStore.add(product);
       navigation.goBack();
     }
   }
 
-  if(!product) {
-    return <Redirect href='/'/>
+  if (!product) {
+    return <Redirect href="/" />;
   }
 
   return (
@@ -36,24 +36,27 @@ export default function Product() {
         className="w-full h-52"
         resizeMode="cover"
       />
-      <View className="p-5 mt-8 flex-1">
-
-      <Text className="text-white text-xl font-heading">{product.title}</Text>
-        <Text className="text-lime-400 text-2xl font-heading my-2">
-          {formatCurrency(product.price)}
-        </Text>
-        <Text className="text-slate-400 font-body text-base leading-6 mb-6">
-          {product.description}
-        </Text>
-        {product.ingredients.map((ingredient) => (
-          <Text
-            key={ingredient}
-            className="text-slate-400 font-body text-base leading-6"
-          >
-            {"\u2022"} {ingredient}
+      <ScrollView>
+        <View className="p-5 mt-8 flex-1">
+          <Text className="text-white text-xl font-heading">
+            {product.title}
           </Text>
-        ))}
-      </View>
+          <Text className="text-lime-400 text-2xl font-heading my-2">
+            {formatCurrency(product.price)}
+          </Text>
+          <Text className="text-slate-400 font-body text-base leading-6 mb-6">
+            {product.description}
+          </Text>
+          {product.ingredients.map((ingredient) => (
+            <Text
+              key={ingredient}
+              className="text-slate-400 font-body text-base leading-6"
+            >
+              {"\u2022"} {ingredient}
+            </Text>
+          ))}
+        </View>
+      </ScrollView>
       <View className="p-5 pb-8 gap-5">
         <Button onPress={handleAddToCart}>
           <Button.Icon>
