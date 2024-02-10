@@ -2,6 +2,7 @@ import { Alert, ScrollView, Text, View } from "react-native";
 
 import Header from "@/components/header";
 import { Product } from "@/components/product";
+import { useState } from "react";
 
 import { ProductCartProps, useCartStore } from "@/stores/cart-store";
 import { formatCurrency } from "@/utils/functions/format-currency";
@@ -11,6 +12,7 @@ import { Feather } from "@expo/vector-icons";
 import { LinkButton } from "@/components/link-button";
 
 export default function Cart() {
+  const [address, setAddress] = useState("")
   const cartStore = useCartStore();
   const total = formatCurrency(cartStore.products.reduce((total, product) => total + product.price * product.quantity, 0)) // Estude o reduce, interessante
 
@@ -23,6 +25,24 @@ export default function Cart() {
                 onPress: () => cartStore.remove(product.id)
             }
         ])
+    }
+
+    function handleOrder() {
+      if(address.trim().length === 0) {
+        return Alert.alert("Pedido", "Informe os dados de entrega")
+      }
+
+      const products = cartStore.products.map((product) => `\n ${product.quantity} || ${product.title}`).join("")
+      
+      const message = `
+      NOVO PEDIDO
+      \n Entregar em: ${address}
+
+      ${products}
+
+      \n Valor total: ${total}
+      `
+console.log(message)
     }
 
   return (
@@ -45,11 +65,11 @@ export default function Cart() {
         <Text className="text-white text-xl font-subtitle">Total:</Text>
         <Text className="text-lime-400 text-2xl font-heading">{total}</Text>
       </View>
-      <Input placeholder="Informe o endereço de entrega com Rua, Bairro, CEP, Número e Complemento"/>
+      <Input placeholder="Informe o endereço de entrega com Rua, Bairro, CEP, Número e Complemento" onChangeText={setAddress}/>
       </View>
         </ScrollView>
         <View className="p-5 gap-5 ">
-            <Button>
+            <Button onPress={handleOrder}>
                 <Button.Text>
                     Enviar pedido
                 </Button.Text>
