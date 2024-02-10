@@ -1,4 +1,4 @@
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View, Linking } from "react-native";
 
 import Header from "@/components/header";
 import { Product } from "@/components/product";
@@ -11,6 +11,8 @@ import { Button } from "@/components/button";
 import { Feather } from "@expo/vector-icons";
 import { LinkButton } from "@/components/link-button";
 import { useNavigation } from "expo-router";
+
+const PHONE_NUMBER = "5537991367973"
 
 export default function Cart() {
   const [address, setAddress] = useState("")
@@ -44,7 +46,9 @@ export default function Cart() {
 
       \n Valor total: ${total}
       `
-    console.log(message)
+ 
+      Linking.openURL(`http://api.whatsapp.com/send?phone=${PHONE_NUMBER}&text=${message}`)
+
     cartStore.clear()
     navigation.goBack()
     Alert.alert("Tudo pronto!", "Pedido enviado com sucesso")
